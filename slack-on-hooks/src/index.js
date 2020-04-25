@@ -1,8 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
 
 import App from "./App";
+import Register from "./Auth/Register";
+import Login from "./Auth/Login";
+
 import * as serviceWorker from "./serviceWorker";
 
 const GlobalStyle = createGlobalStyle`
@@ -15,10 +19,20 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
+const Root = () => (
+  <Router>
+    <Switch>
+      <Route exact path="/" component={App} />
+      <Route path="/login" component={Login} />
+      <Route path="/register" component={Register} />
+    </Switch>
+  </Router>
+);
+
 ReactDOM.render(
   <React.StrictMode>
     <GlobalStyle />
-    <App />
+    <Root />
   </React.StrictMode>,
   document.getElementById("root")
 );
