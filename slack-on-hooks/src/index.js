@@ -7,6 +7,8 @@ import App from "./App";
 import Register from "./components/Auth/Register";
 import Login from "./components/Auth/Login";
 
+import "semantic-ui-css/semantic.min.css";
+
 import * as serviceWorker from "./serviceWorker";
 
 const GlobalStyle = createGlobalStyle`
@@ -30,10 +32,10 @@ const Root = () => (
 );
 
 ReactDOM.render(
-  <React.StrictMode>
+  <>
     <GlobalStyle />
     <Root />
-  </React.StrictMode>,
+  </>,
   document.getElementById("root")
 );
 
