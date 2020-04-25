@@ -4,8 +4,8 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
 
 import App from "./App";
-import Register from "./Auth/Register";
-import Login from "./Auth/Login";
+import Register from "./components/Auth/Register";
+import Login from "./components/Auth/Login";
 
 import * as serviceWorker from "./serviceWorker";
 
