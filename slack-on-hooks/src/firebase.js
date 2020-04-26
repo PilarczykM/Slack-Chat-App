@@ -17,3 +17,5 @@ var firebaseConfig = {
 };
 // Initialize Fireb ase
 firebase.initializeApp(firebaseConfig);
+
+export default firebase;
