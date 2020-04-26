@@ -1,18 +1,17 @@
 import React, { useState } from "react";
-import styled from "styled-components";
-import firebase from "../../firebase";
 import { Link } from "react-router-dom";
 import {
-  Grid,
   Button,
-  Segment,
   Form,
+  Grid,
   Header,
-  Message,
   Icon,
+  Message,
+  Segment,
 } from "semantic-ui-react";
-
-import { inputValidator, handleError } from "./utils";
+import styled from "styled-components";
+import firebase from "../../firebase";
+import { handleError, inputValidator } from "./utils";
 
 const StyledConstainer = styled.div`
   height: 100vh;
@@ -21,6 +20,7 @@ const StyledConstainer = styled.div`
   justify-content: center;
 `;
 
+// Zamienic na named export xD
 const Register = () => {
   const [errorsObj, setErrors] = useState([]);
   const [inputValues, setInputValues] = useState({
@@ -30,13 +30,10 @@ const Register = () => {
     passwordConfirmation: "",
   });
 
-  const handleChange = (e) => {
-    const inputName = e.target.name;
-    const inputValue = e.target.value;
-
+  const handleChange = ({ target: { name, value } }) => {
     setInputValues((prevSate) => ({
       ...prevSate,
-      [inputName]: inputValue,
+      [name]: value,
     }));
   };
 
@@ -44,7 +41,7 @@ const Register = () => {
     e.preventDefault();
 
     const { username, email, password, passwordConfirmation } = inputValues;
-
+    // Todo: Input validator powinien przyjac calego inputValues.
     let errors = inputValidator(
       email,
       username,
@@ -77,6 +74,7 @@ const Register = () => {
             <Icon name="puzzle piece" color="orange" />
             Register dev chat.
           </Header>
+          {/* Todo: Do osobnej funkcji render errors! */}
           {errorsObj.length > 0 && (
             <Message error>
               <h3>Error</h3>
