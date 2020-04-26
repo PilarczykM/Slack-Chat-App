@@ -1,3 +1,4 @@
+import md5 from "md5";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -9,20 +10,12 @@ import {
   Message,
   Segment,
 } from "semantic-ui-react";
-import styled from "styled-components";
-import firebase from "../../firebase";
-import { handleError, inputValidator } from "./utils";
+import firebase from "../../../firebase";
+import { handleError, inputValidator } from "../utils";
+import * as S from "./Register.styled";
 
-const StyledConstainer = styled.div`
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-// Zamienic na named export xD
-const Register = () => {
-  const [errorsObj, setErrors] = useState([]);
+export const Register = () => {
+  const [errors, setErrors] = useState([]);
   const [inputValues, setInputValues] = useState({
     username: "",
     email: "",
@@ -40,14 +33,9 @@ const Register = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const { username, email, password, passwordConfirmation } = inputValues;
-    // Todo: Input validator powinien przyjac calego inputValues.
-    let errors = inputValidator(
-      email,
-      username,
-      password,
-      passwordConfirmation
-    );
+    const { email, password, username } = inputValues;
+
+    let errors = inputValidator(inputValues);
 
     setErrors(errors);
 
@@ -56,31 +44,56 @@ const Register = () => {
         .auth()
         .createUserWithEmailAndPassword(email, password)
         .then((createdUser) => {
-          console.log(createdUser);
+          createdUser.user
+            .updateProfile({
+              displayName: username,
+              photoURL: `http://gravatar.com/avatar/${md5(
+                createdUser.user.email
+              )}?d:indenticon`,
+            })
+            .then(() => {
+              saveUser(createdUser).then(() => {
+                console.log("User was saved in database!");
+              });
+            })
+            .catch((err) => {
+              errors = handleError(err);
+              setErrors(errors);
+            });
         })
         .catch((err) => {
-          console.log(handleError(err));
+          errors = handleError(err);
+          setErrors(errors);
         });
-    } else {
-      console.log(errors);
     }
   };
 
+  const saveUser = (createdUser) => {
+    return firebase
+      .firestore()
+      .collection("users")
+      .doc(createdUser.user.uid)
+      .set({
+        name: createdUser.user.displayName,
+        avatar: createdUser.user.photoURL,
+      });
+  };
+
+  const displayErrors = (errors) =>
+    errors.map((err, i) => <p key={i}>{err}</p>);
+
   return (
-    <StyledConstainer>
+    <S.Constainer>
       <Grid textAlign="center" verticalAlign="middle">
         <Grid.Column style={{ minWidth: 300, maxWidth: 450 }}>
           <Header as="h2" icon color="orange" textAlign="center">
             <Icon name="puzzle piece" color="orange" />
             Register dev chat.
           </Header>
-          {/* Todo: Do osobnej funkcji render errors! */}
-          {errorsObj.length > 0 && (
+          {errors.length > 0 && (
             <Message error>
               <h3>Error</h3>
-              {errorsObj.map((err) => (
-                <p>{err}</p>
-              ))}
+              {displayErrors(errors)}
             </Message>
           )}
           <Form onSubmit={handleSubmit} size="large">
@@ -135,8 +148,6 @@ const Register = () => {
           </Message>
         </Grid.Column>
       </Grid>
-    </StyledConstainer>
+    </S.Constainer>
   );
 };
-
-export default Register;

@@ -1,25 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { createGlobalStyle } from "styled-components";
-
-import App from "./App";
-import Register from "./components/Auth/Register";
-import Login from "./components/Auth/Login";
-
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "semantic-ui-css/semantic.min.css";
-
+import App from "./App";
+import { Login } from "./components/Auth/Login";
+import { Register } from "./components/Auth/Register/Register";
+import { GlobalStyle } from "./GlobalStyle";
 import * as serviceWorker from "./serviceWorker";
-
-const GlobalStyle = createGlobalStyle`
-  *,
-  *::before,
-  *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-`;
 
 const Root = () => (
   <Router>

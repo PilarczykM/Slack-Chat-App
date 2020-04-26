@@ -1,15 +1,11 @@
-export function inputValidator(
-  email,
-  userName,
-  password,
-  passwordConfirmation
-) {
+export function inputValidator(inputValues) {
+  const { email, username, password, passwordConfirmation } = inputValues;
   let errors = [];
 
   if (!email && email === "") {
     errors.push("Email is not valid!");
   }
-  if (!userName && userName === "") {
+  if (!username && username === "") {
     errors.push("User name is not valid!");
   }
   if (!password && password === "") {
@@ -22,16 +18,24 @@ export function inputValidator(
 }
 
 export function handleError(err) {
+  let errors = [];
   switch (err.code) {
     case "auth/invalid-email":
-      return "Your email is invalid.";
+      errors.push("Your email is invalid.");
+      break;
     case "auth/weak-password":
-      return "Your password is to week. Try better password!";
+      errors.push("Your password is to week. Try better password!");
+      break;
     case "auth/operation-not-allowed":
-      return "Contact us! Something went wrong.";
+      errors.push("Contact us! Something went wrong.");
+      break;
     case "auth/email-already-in-use":
-      return "Email already exists!";
+      errors.push("Email already exists!");
+      break;
     default:
-      return "Unknown error! " + err.code;
+      errors.push("Unknown error! " + err.code);
+      break;
   }
+
+  return errors;
 }
