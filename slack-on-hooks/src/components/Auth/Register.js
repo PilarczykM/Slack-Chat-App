@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import {
@@ -19,7 +19,22 @@ const StyledConstainer = styled.div`
 `;
 
 const Register = () => {
-  const handleChange = () => {};
+  const [inputValues, setInputValues] = useState({
+    username: "",
+    email: "",
+    password: "",
+    passwordConfirmation: "",
+  });
+
+  const handleChange = (e) => {
+    const inputName = e.target.name;
+    const inputValue = e.target.value;
+
+    setInputValues((prevSate) => ({
+      ...prevSate,
+      [inputName]: inputValue,
+    }));
+  };
 
   return (
     <StyledConstainer>
@@ -38,6 +53,7 @@ const Register = () => {
                 iconPosition="left"
                 placeholder="User name"
                 onChange={handleChange}
+                value={inputValues.username}
                 type="text"
               />
               <Form.Input
@@ -47,6 +63,7 @@ const Register = () => {
                 iconPosition="left"
                 placeholder="Email address"
                 onChange={handleChange}
+                value={inputValues.email}
                 type="email"
               />
               <Form.Input
@@ -56,6 +73,7 @@ const Register = () => {
                 iconPosition="left"
                 placeholder="Password"
                 onChange={handleChange}
+                value={inputValues.password}
                 type="password"
               />
               <Form.Input
@@ -63,8 +81,9 @@ const Register = () => {
                 name="passwordConfirmation"
                 icon="repeat"
                 iconPosition="left"
-                placeholder="Password Confirmation"
+                placeholder="Password confirmation"
                 onChange={handleChange}
+                value={inputValues.passwordConfirmation}
                 type="password"
               />
               <Button color="orange" fluid size="large">
