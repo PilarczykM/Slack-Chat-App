@@ -10,7 +10,7 @@ import {
   Message,
   Segment,
 } from "semantic-ui-react";
-import firebase from "../../../firebase";
+import firebase from "../../firebase";
 import * as S from "./Register.styled";
 import { InputProps } from "./types";
 import { handleError, inputValidator } from "./utils";
@@ -46,24 +46,22 @@ export const Register: React.FC = () => {
         .auth()
         .createUserWithEmailAndPassword(email, password)
         .then((createdUser: firebase.auth.UserCredential) => {
-          if (createdUser && createdUser.user) {
-            createdUser.user
-              .updateProfile({
-                displayName: username,
-                photoURL: `http://gravatar.com/avatar/${Md5.init(
-                  createdUser.user.email
-                )}?d:indenticon`,
-              })
-              .then(() => {
-                saveUser(createdUser)?.then(() => {
-                  console.log("User was saved in database!");
-                });
-              })
-              .catch((err) => {
-                errors = handleError(err);
-                setErrors(errors);
+          createdUser.user
+            ?.updateProfile({
+              displayName: username,
+              photoURL: `http://gravatar.com/avatar/${Md5.init(
+                createdUser.user.email
+              )}?d:indenticon`,
+            })
+            .then(() => {
+              saveUser(createdUser)?.then(() => {
+                console.log("User was saved in database!");
               });
-          }
+            })
+            .catch((err) => {
+              errors = handleError(err);
+              setErrors(errors);
+            });
         })
         .catch((err) => {
           errors = handleError(err);

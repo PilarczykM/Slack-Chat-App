@@ -3,9 +3,9 @@ import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "semantic-ui-css/semantic.min.css";
 import { App } from "./App";
-import { Login } from "./components/Auth/Login";
-import { Register } from "./components/Auth/Register/Register";
 import { GlobalStyle } from "./GlobalStyle";
+import { Login } from "./modules/Login/Login";
+import { Register } from "./modules/Register/Register";
 import * as serviceWorker from "./serviceWorker";
 
 const Root = () => (
