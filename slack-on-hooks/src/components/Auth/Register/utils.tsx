@@ -1,14 +1,16 @@
-export function inputValidator(inputValues) {
+import { InputProps } from "./types";
+
+export function inputValidator(inputValues: InputProps) {
   const { email, username, password, passwordConfirmation } = inputValues;
   let errors = [];
 
-  if (!email && email === "") {
+  if (!email && email.trim() === "") {
     errors.push("Email is not valid!");
   }
-  if (!username && username === "") {
+  if (!username && username.trim() === "") {
     errors.push("User name is not valid!");
   }
-  if (!password && password === "") {
+  if (!password && password.trim() === "") {
     errors.push("Password is not valid!");
   } else if (password !== passwordConfirmation) {
     errors.push("Passwords does not match!");
@@ -17,7 +19,7 @@ export function inputValidator(inputValues) {
   return errors;
 }
 
-export function handleError(err) {
+export function handleError(err: any) {
   let errors = [];
   switch (err.code) {
     case "auth/invalid-email":

@@ -1,4 +1,4 @@
-import md5 from "md5";
+import { Md5 } from "md5-typescript";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -11,27 +11,29 @@ import {
   Segment,
 } from "semantic-ui-react";
 import firebase from "../../../firebase";
-import { handleError, inputValidator } from "../utils";
 import * as S from "./Register.styled";
+import { InputProps } from "./types";
+import { handleError, inputValidator } from "./utils";
 
-export const Register = () => {
-  const [errors, setErrors] = useState([]);
-  const [inputValues, setInputValues] = useState({
+export const Register: React.FC = () => {
+  const [errors, setErrors] = useState<string[]>([]);
+  const [inputValues, setInputValues] = useState<InputProps>({
     username: "",
     email: "",
     password: "",
     passwordConfirmation: "",
   });
 
-  const handleChange = ({ target: { name, value } }) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
     setInputValues((prevSate) => ({
       ...prevSate,
       [name]: value,
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
     const { email, password, username } = inputValues;
 
@@ -43,23 +45,25 @@ export const Register = () => {
       firebase
         .auth()
         .createUserWithEmailAndPassword(email, password)
-        .then((createdUser) => {
-          createdUser.user
-            .updateProfile({
-              displayName: username,
-              photoURL: `http://gravatar.com/avatar/${md5(
-                createdUser.user.email
-              )}?d:indenticon`,
-            })
-            .then(() => {
-              saveUser(createdUser).then(() => {
-                console.log("User was saved in database!");
+        .then((createdUser: firebase.auth.UserCredential) => {
+          if (createdUser && createdUser.user) {
+            createdUser.user
+              .updateProfile({
+                displayName: username,
+                photoURL: `http://gravatar.com/avatar/${Md5.init(
+                  createdUser.user.email
+                )}?d:indenticon`,
+              })
+              .then(() => {
+                saveUser(createdUser)?.then(() => {
+                  console.log("User was saved in database!");
+                });
+              })
+              .catch((err) => {
+                errors = handleError(err);
+                setErrors(errors);
               });
-            })
-            .catch((err) => {
-              errors = handleError(err);
-              setErrors(errors);
-            });
+          }
         })
         .catch((err) => {
           errors = handleError(err);
@@ -68,18 +72,20 @@ export const Register = () => {
     }
   };
 
-  const saveUser = (createdUser) => {
-    return firebase
-      .firestore()
-      .collection("users")
-      .doc(createdUser.user.uid)
-      .set({
-        name: createdUser.user.displayName,
-        avatar: createdUser.user.photoURL,
-      });
+  const saveUser = (createdUser: firebase.auth.UserCredential) => {
+    if (createdUser && createdUser.user) {
+      return firebase
+        .firestore()
+        .collection("users")
+        .doc(createdUser.user.uid)
+        .set({
+          name: createdUser.user.displayName,
+          avatar: createdUser.user.photoURL,
+        });
+    }
   };
 
-  const displayErrors = (errors) =>
+  const displayErrors = (errors: string[]) =>
     errors.map((err, i) => <p key={i}>{err}</p>);
 
   return (
