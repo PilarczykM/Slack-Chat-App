@@ -104,4 +104,4 @@ dist
 .tern-port
 
 # Private files
-Keys.js
+Keys.tsx
