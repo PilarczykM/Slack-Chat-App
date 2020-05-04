@@ -1,6 +1,6 @@
 import { InputProps } from "./types";
 
-export function inputValidator(inputValues: InputProps) {
+export function inputValidator(inputValues: InputProps): string[] {
   const { email, username, password, passwordConfirmation } = inputValues;
   let errors = [];
 
@@ -19,7 +19,7 @@ export function inputValidator(inputValues: InputProps) {
   return errors;
 }
 
-export function handleError(err: any) {
+export function handleError(err: any): string[] {
   let errors = [];
   switch (err.code) {
     case "auth/invalid-email":

@@ -70,7 +70,9 @@ export const Register: React.FC = () => {
     }
   };
 
-  const saveUser = (createdUser: firebase.auth.UserCredential) => {
+  const saveUser = (
+    createdUser: firebase.auth.UserCredential
+  ): Promise<void> | undefined => {
     if (createdUser && createdUser.user) {
       return firebase
         .firestore()
@@ -83,14 +85,14 @@ export const Register: React.FC = () => {
     }
   };
 
-  const displayErrors = (errors: string[]) =>
+  const displayErrors = (errors: string[]): JSX.Element[] =>
     errors.map((err, i) => <p key={i}>{err}</p>);
 
   return (
     <S.Constainer>
       <Grid textAlign="center" verticalAlign="middle">
-        <Grid.Column style={{ minWidth: 300, maxWidth: 450 }}>
-          <Header as="h2" icon color="orange" textAlign="center">
+        <Grid.Column style={{ minWidth: 400, maxWidth: 450 }}>
+          <Header as="h1" icon color="orange" textAlign="center">
             <Icon name="puzzle piece" color="orange" />
             Register dev chat.
           </Header>
