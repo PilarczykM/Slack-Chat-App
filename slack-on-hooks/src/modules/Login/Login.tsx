@@ -16,6 +16,7 @@ import { handleError, inputValidator } from "./utils";
 
 export const Login: React.FC = () => {
   const [errors, setErrors] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [inputValues, setInputValues] = useState<InputValues>({
     email: "",
     password: "",
@@ -39,13 +40,16 @@ export const Login: React.FC = () => {
     setErrors(errors);
 
     if (errors.length === 0) {
+      setIsLoading(true);
       firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then((signedInUser) => {
+          setIsLoading(false);
           console.log(signedInUser);
         })
         .catch((err) => {
+          setIsLoading(false);
           errors = handleError(err);
           setErrors(errors);
         });
@@ -91,7 +95,7 @@ export const Login: React.FC = () => {
                 value={inputValues.password}
                 type="password"
               />
-              <Button color="violet" fluid size="large">
+              <Button color="violet" fluid size="large" loading={isLoading}>
                 Login
               </Button>
             </Segment>

@@ -17,6 +17,8 @@ import { handleError, inputValidator } from "./utils";
 
 export const Register: React.FC = () => {
   const [errors, setErrors] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const [inputValues, setInputValues] = useState<InputProps>({
     username: "",
     email: "",
@@ -42,6 +44,7 @@ export const Register: React.FC = () => {
     setErrors(errors);
 
     if (errors.length === 0) {
+      setIsLoading(true);
       firebase
         .auth()
         .createUserWithEmailAndPassword(email, password)
@@ -55,15 +58,18 @@ export const Register: React.FC = () => {
             })
             .then(() => {
               saveUser(createdUser)?.then(() => {
+                setIsLoading(false);
                 console.log("User was saved in database!");
               });
             })
             .catch((err) => {
+              setIsLoading(false);
               errors = handleError(err);
               setErrors(errors);
             });
         })
         .catch((err) => {
+          setIsLoading(false);
           errors = handleError(err);
           setErrors(errors);
         });
@@ -144,7 +150,7 @@ export const Register: React.FC = () => {
                 value={inputValues.passwordConfirmation}
                 type="password"
               />
-              <Button color="orange" fluid size="large">
+              <Button color="orange" fluid size="large" loading={isLoading}>
                 Register
               </Button>
             </Segment>
