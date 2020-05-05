@@ -1,19 +1,21 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
 import "semantic-ui-css/semantic.min.css";
 import { GlobalStyle } from "./GlobalStyle";
 import { App } from "./modules/App/App";
 import * as serviceWorker from "./serviceWorker";
+import { store } from "./store/store";
 
 const Root: React.FC = () => {
   return (
-    <>
+    <Provider store={store}>
       <GlobalStyle />
       <Router>
         <App />
       </Router>
-    </>
+    </Provider>
   );
 };
 

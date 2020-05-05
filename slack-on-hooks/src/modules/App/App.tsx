@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { Route, Switch, useHistory } from "react-router-dom";
+import * as actionTypes from "../../store/actions/types";
 import firebase from "../../firebase";
 import { Home } from "../Home/Home";
 import { Login } from "../Login/Login";
@@ -7,10 +9,15 @@ import { Register } from "../Register/Register";
 
 export const App: React.FC = () => {
   const history = useHistory();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
+        dispatch({
+          type: actionTypes.ADD_USER,
+          payload: { currentUser: user },
+        });
         history.push("/");
       }
     });
