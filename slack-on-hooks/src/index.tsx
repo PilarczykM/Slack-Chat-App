@@ -6,7 +6,7 @@ import "semantic-ui-css/semantic.min.css";
 import { GlobalStyle } from "./GlobalStyle";
 import { App } from "./modules/App/App";
 import * as serviceWorker from "./serviceWorker";
-import { store } from "./store/store";
+import { store } from "./store";
 
 const Root: React.FC = () => {
   return (

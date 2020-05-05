@@ -1,8 +1,8 @@
-import * as actionTypes from "./types";
+import { ADD_USER } from "./types";
 
 export const setUser = (user: any) => {
   return {
-    type: actionTypes.ADD_USER,
+    type: ADD_USER,
     payload: {
       currentUser: user,
     },
