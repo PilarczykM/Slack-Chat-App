@@ -4,7 +4,7 @@ import { Route, Switch, useHistory } from "react-router-dom";
 import { Spinner } from "../../components/Spinner/Spinner";
 import firebase from "../../firebase";
 import { ApplicationState } from "../../store";
-import { ADD_USER } from "../../store/user/types";
+import { SET_USER } from "../../store/user/types";
 import { Home } from "../Home/Home";
 import { Login } from "../Login/Login";
 import { Register } from "../Register/Register";
@@ -16,12 +16,13 @@ export const App: React.FC = () => {
   const isLoading = useSelector(
     (state: ApplicationState) => state.user.isLoading
   );
+  // Todo dodac selectory const isLoading = useSelector(userSelectors.isLoading);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         dispatch({
-          type: ADD_USER,
+          type: SET_USER,
           payload: { currentUser: user },
         });
         history.push("/");

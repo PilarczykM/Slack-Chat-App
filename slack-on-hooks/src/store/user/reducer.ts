@@ -1,4 +1,4 @@
-import { ADD_USER, IUserState } from "./types";
+import { IUserState, SET_USER } from "./types";
 
 const initialUserState: IUserState = {
   isLoading: true,
@@ -7,10 +7,10 @@ const initialUserState: IUserState = {
 
 export const userReducer = (
   state: IUserState = initialUserState,
-  action: any
+  action: { type: string; payload: any }
 ) => {
   switch (action.type) {
-    case ADD_USER:
+    case SET_USER:
       return {
         isLoading: false,
         currentUser: action.payload.currentUser,

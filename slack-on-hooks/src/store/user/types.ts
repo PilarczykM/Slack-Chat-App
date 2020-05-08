@@ -1,4 +1,4 @@
-export const ADD_USER: string = "ADD_USER";
+export const SET_USER: string = "user/SET_USER";
 
 export interface IUserState {
   isLoading: boolean;
