@@ -4,7 +4,7 @@ import { Route, Switch, useHistory } from "react-router-dom";
 import { Spinner } from "../../components/Spinner/Spinner";
 import firebase from "../../firebase";
 import { ApplicationState } from "../../store";
-import { SET_USER } from "../../store/user/types";
+import { UserActionTypes } from "../../store/user/types";
 import { Home } from "../Home/Home";
 import { Login } from "../Login/Login";
 import { Register } from "../Register/Register";
@@ -22,7 +22,7 @@ export const App: React.FC = () => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         dispatch({
-          type: SET_USER,
+          type: UserActionTypes.SET_USER,
           payload: { currentUser: user },
         });
         history.push("/");

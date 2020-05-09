@@ -1,4 +1,6 @@
-export const SET_USER: string = "user/SET_USER";
+export enum UserActionTypes {
+  SET_USER = "@@user/SET_USER",
+}
 
 export interface IUserState {
   isLoading: boolean;
