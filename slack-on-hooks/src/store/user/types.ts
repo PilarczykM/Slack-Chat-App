@@ -1,8 +1,6 @@
-export enum UserActionTypes {
-  SET_USER = "@@user/SET_USER",
-}
-
-export interface IUserState {
-  isLoading: boolean;
-  currentUser: {} | null;
+export interface IUser {
+  displayName: string | null;
+  uid: string | null;
+  photoURL: string | null;
+  email: string | null;
 }

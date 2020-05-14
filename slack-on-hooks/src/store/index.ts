@@ -1,16 +1,18 @@
-import { combineReducers, createStore, Reducer } from "redux";
-import { composeWithDevTools } from "redux-devtools-extension";
-import { userReducer } from "./user/reducer";
-import { IUserState } from "./user/types";
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
+import logger from "redux-logger";
+import { loadingScreenSlice } from "./loadingScreen/slice";
+import { userSlice } from "./user/slice";
+import { IUser } from "./user/types";
 
-export interface ApplicationState {
-  user: IUserState;
+const reducer = {
+  user: userSlice.reducer,
+  loadingScreen: loadingScreenSlice.reducer,
+};
+
+const middleware = [...getDefaultMiddleware(), logger];
+export const store = configureStore({ reducer, middleware });
+
+export interface State {
+  user: IUser;
+  loadingScreen: boolean;
 }
-
-const rootReducer: Reducer<ApplicationState> = combineReducers<
-  ApplicationState
->({
-  user: userReducer,
-});
-
-export const store = createStore(rootReducer, composeWithDevTools());
