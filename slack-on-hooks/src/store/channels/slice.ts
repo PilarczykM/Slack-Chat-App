@@ -19,7 +19,7 @@ export const channelsSlice = createSlice({
     remove: (state: IChannel[], { payload }: PayloadAction<{ id: string }>) => {
       const { id } = payload;
       let index = state.findIndex((channel) => channel.id === id);
-      if (index >= 0) state.slice(index, 1);
+      if (index >= 0) state.splice(index, 1);
     },
   },
 });
