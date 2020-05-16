@@ -1,28 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Button, Form, Icon, Input, Menu, Modal } from "semantic-ui-react";
 import firebase from "../../firebase";
 import { State } from "../../store";
+import {
+  addChannelActionCreator,
+  modifyChannelActionCreator,
+  removeChannelActionCreator,
+} from "../../store/channels/slice";
+import { IChannel } from "../../store/channels/types";
 
 interface IInputValues {
   channelName: string;
   channelDetails: string;
 }
 
-interface IChannel {
-  id: string;
-  channelDetails: string;
-  channelName: string;
-  createdBy: {
-    name: string;
-    email: string;
-    avatar: string;
-  };
-}
-
 export const Channel: React.FC = () => {
-  const [channels, setChannels] = useState<IChannel[]>([]);
+  const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const channels = useSelector((state: State) => state.channels);
   const [inputValues, setInputValues] = useState<IInputValues>({
     channelDetails: "",
     channelName: "",
@@ -32,26 +28,44 @@ export const Channel: React.FC = () => {
 
   useEffect(() => {
     let channelRef = firebase.firestore().collection("channels");
-    let channels: IChannel[] = [];
     channelRef.onSnapshot((snap) => {
       // Podpiac to pod redux, w zaleznosci od typu dawanego bedzie sie dodawalo, usuwalo, modyfikowalo channele.
-      snap.docChanges().forEach((doc) => console.log(doc.type, doc.doc.data()));
-
-      snap.docs.forEach((doc) => {
-        let data = doc.data();
-        let newChannel: IChannel = {
-          id: data.id,
-          channelDetails: data.channelDetails,
-          channelName: data.channelName,
-          createdBy: {
-            name: data.name,
-            email: data.email,
-            avatar: data.avatar,
-          },
-        };
-        channels.push(newChannel);
+      snap.docChanges().forEach((doc) => {
+        const { channelDetails, channelName, createdBy, id } = doc.doc.data();
+        const { email, name, avatar } = createdBy;
+        switch (doc.type) {
+          case "added":
+            dispatch(
+              addChannelActionCreator({
+                id,
+                channelName,
+                channelDetails,
+                createdBy: {
+                  email,
+                  name,
+                  avatar,
+                },
+              })
+            );
+            break;
+          case "modified":
+            dispatch(
+              modifyChannelActionCreator({
+                id,
+                channelName,
+                channelDetails,
+                createdBy: {
+                  email,
+                  name,
+                  avatar,
+                },
+              })
+            );
+            break;
+          case "removed":
+            dispatch(removeChannelActionCreator({ id }));
+        }
       });
-      setChannels(channels);
     });
   }, []);
 
@@ -94,7 +108,6 @@ export const Channel: React.FC = () => {
             id,
           })
           .then(() => {
-            console.log(newChannel.channelName + " added.");
             clearModal();
           })
           .catch((err) => {
@@ -105,6 +118,19 @@ export const Channel: React.FC = () => {
         console.error(err);
       });
   };
+
+  const displayChannels = (channelArg: IChannel[]) =>
+    channelArg.length > 0 &&
+    channelArg.map((channel: IChannel) => (
+      <Menu.Item
+        key={channel.id}
+        onClick={() => console.log(channel)}
+        name={channel.channelName}
+        style={{ opacity: "0.7" }}
+      >
+        # {channel.channelName}
+      </Menu.Item>
+    ));
 
   const validateInput = () =>
     inputValues.channelName && inputValues.channelDetails;
@@ -131,6 +157,7 @@ export const Channel: React.FC = () => {
           ({channels.length}){" "}
           <Icon name="add" onClick={() => setIsModalOpen(true)} />
         </Menu.Item>
+        {displayChannels(channels)}
       </Menu.Menu>
       <Modal
         open={isModalOpen}
