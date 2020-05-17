@@ -9,4 +9,4 @@ export interface IChannel {
   };
 }
 
-export type IActivateChannel = IChannel | null;
+export type IActiveChannel = IChannel;

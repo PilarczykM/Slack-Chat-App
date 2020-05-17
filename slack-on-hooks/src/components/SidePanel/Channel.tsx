@@ -4,6 +4,7 @@ import { Button, Form, Icon, Input, Menu, Modal } from "semantic-ui-react";
 import firebase from "../../firebase";
 import { State } from "../../store";
 import {
+  activateChannelActionCreator,
   addChannelActionCreator,
   modifyChannelActionCreator,
   removeChannelActionCreator,
@@ -18,6 +19,7 @@ interface IInputValues {
 export const Channel: React.FC = () => {
   const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isFirstLoadingPage, setIsFirstLoadingPage] = useState<boolean>(true);
   const channels = useSelector((state: State) => state.channels);
   const [inputValues, setInputValues] = useState<IInputValues>({
     channelDetails: "",
@@ -25,6 +27,7 @@ export const Channel: React.FC = () => {
   });
 
   const userSelector = useSelector((state: State) => state.user);
+  const activeChannel = useSelector((state: State) => state.activeChannel);
 
   useEffect(() => {
     let channelRef = firebase.firestore().collection("channels");
@@ -68,6 +71,13 @@ export const Channel: React.FC = () => {
       });
     });
   }, []);
+
+  useEffect(() => {
+    if (isFirstLoadingPage && channels.length > 0) {
+      setIsFirstLoadingPage(false);
+      dispatch(activateChannelActionCreator(channels[0]));
+    }
+  }, [channels]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -124,9 +134,10 @@ export const Channel: React.FC = () => {
     channelArg.map((channel: IChannel) => (
       <Menu.Item
         key={channel.id}
-        onClick={() => console.log(channel)}
+        onClick={() => dispatch(activateChannelActionCreator(channel))}
         name={channel.channelName}
         style={{ opacity: "0.7" }}
+        active={activeChannel.id == channel.id}
       >
         # {channel.channelName}
       </Menu.Item>
