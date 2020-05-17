@@ -21,4 +21,9 @@ export const GlobalStyle = createGlobalStyle`
     right: 0;
     z-index: 200;
   }
+
+  .message__self {
+    border-left: 2px solid orange;
+    padding-left: 8px;
+  }
 `;
