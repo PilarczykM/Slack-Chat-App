@@ -8,3 +8,5 @@ export interface IChannel {
     avatar: string;
   };
 }
+
+export type IActivateChannel = IChannel | null;

@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IChannel } from "./types";
+import { IActivateChannel, IChannel } from "./types";
 
 const initialChannelsState: IChannel[] = [];
+const initialActiveChannelState: IActivateChannel = null;
 
 export const channelsSlice = createSlice({
   name: "channels",
@@ -24,8 +25,26 @@ export const channelsSlice = createSlice({
   },
 });
 
+export const activeChannelSlice = createSlice({
+  name: "activeChannel",
+  initialState: initialActiveChannelState,
+  reducers: {
+    active: (state: IActivateChannel, { payload }: PayloadAction<IChannel>) => {
+      state = { ...payload };
+    },
+    disactive: (state) => {
+      state = null;
+    },
+  },
+});
+
 export const {
   add: addChannelActionCreator,
   modify: modifyChannelActionCreator,
   remove: removeChannelActionCreator,
 } = channelsSlice.actions;
+
+export const {
+  active: activateChannelActionCreator,
+  disactive: disactivateChannelActionCreator,
+} = activeChannelSlice.actions;
