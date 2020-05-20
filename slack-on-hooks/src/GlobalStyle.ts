@@ -26,4 +26,12 @@ export const GlobalStyle = createGlobalStyle`
     border-left: 2px solid orange;
     padding-left: 8px;
   }
+
+  .message__image {
+    padding: 1em;
+  }
+
+  .progress__bar {
+    margin: 1em 0 !important;
+  }
 `;

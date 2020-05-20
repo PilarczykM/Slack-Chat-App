@@ -137,7 +137,7 @@ export const Channel: React.FC = () => {
         onClick={() => dispatch(activateChannelActionCreator(channel))}
         name={channel.channelName}
         style={{ opacity: "0.7" }}
-        active={activeChannel.id == channel.id}
+        active={activeChannel.id === channel.id}
       >
         # {channel.channelName}
       </Menu.Item>

@@ -54,6 +54,7 @@ export const Messages: React.FC = () => {
         key={message.id}
         id={message.id}
         content={message.content}
+        image={message.image}
         user={user}
         timestamp={message.timestamp}
       />

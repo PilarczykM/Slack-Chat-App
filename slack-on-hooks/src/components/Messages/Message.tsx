@@ -1,14 +1,15 @@
 import moment from "moment";
 import React from "react";
 import { useSelector } from "react-redux";
-import { Comment } from "semantic-ui-react";
+import { Comment, Image } from "semantic-ui-react";
 import { State } from "../../store";
 import { IUser } from "../../store/user/types";
 
 interface MessageProp {
   user: IUser;
   id: string;
-  content: string;
+  content?: string;
+  image?: string;
   timestamp: {
     seconds: string;
   };
@@ -20,6 +21,9 @@ export const Message: React.FC<MessageProp> = (message: MessageProp) => {
   const isOwnMessage = (message: MessageProp): string => {
     return userId === message.user.uid ? "message__self" : "";
   };
+
+  const isImageMessage = (message: MessageProp) =>
+    message.image ? true : false;
 
   const calculateTime = (time: string) => moment(time).format("HH:mm:ss");
 
@@ -37,7 +41,11 @@ export const Message: React.FC<MessageProp> = (message: MessageProp) => {
         <Comment.Metadata>
           {calculateTime(message.timestamp.seconds)}
         </Comment.Metadata>
-        <Comment.Text>{message.content}</Comment.Text>
+        {isImageMessage(message) ? (
+          <Image src={message.image} className="message__image" />
+        ) : (
+          <Comment.Text>{message.content}</Comment.Text>
+        )}
       </Comment.Content>
     </Comment>
   );
